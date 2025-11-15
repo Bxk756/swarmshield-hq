@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Swarm Shield AI Security Blog</title>
+  <meta name="description" content="AI-powered security tips, alerts, and tools for schools, creators, and organizations." />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0f0f1a;
+      --text: #e0e0ff;
+      --accent: #00ff9d;
+      --card: #1a1a2e;
+      --border: #333355;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      padding: 2rem 0 1rem;
+    }
+    h1 {
+      font-size: 2.8rem;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+    .tagline { color: var(--accent); font-weight: 600; }
+
+    /* === Magazine Grid === */
+    #posts-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      padding-top: 2rem;
+    }
+
+    .post-card {
+      background: var(--card);
+      padding: 1.6rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .post-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,255,157,0.08);
+    }
+    .post-card h2 {
+      color: white;
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+    .meta {
+      color: #999;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    .read-more {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* === Single Post View === */
+    #single-post {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      max-width: 800px;
+      margin: 2rem auto;
+      display:none;
+    }
+    #single-post h2 {
+      font-size: 2rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+    #single-meta {
+      color: #888;
+      margin-bottom: 1.5rem;
+    }
+    #single-body p {
+      margin: 1rem 0;
+    }
+    #single-body h2 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    #back-to-list {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- HERO BANNER -->
+    <img src="A_digital_illustration_for_the_Swarm_Shield_AI_Sec.png"
+         alt="Swarm Shield AI Security Blog Banner"
+         style="width:100%; border-radius:16px; margin-bottom:2rem;">
+
+    <header>
+      <h1>Swarm Shield AI Blog</h1>
+      <p class="tagline">AI-Powered Security Intelligence for Schools & Organizations</p>
+    </header>
+
+    <!-- POSTS GRID -->
+    <section id="posts-container"></section>
+
+    <!-- SINGLE POST -->
+    <section id="single-post">
+      <button id="back-to-list">← Back to All Posts</button>
+      <h2 id="single-title"></h2>
+      <div id="single-meta"></div>
+      <div id="single-body"></div>
+    </section>
+
+    <footer style="text-align:center;margin-top:4rem;color:#555;">
+      © 2025 Swarm Shield AI • All Rights Reserved
+    </footer>
+  </div>
+
+  <!-- === Blog Engine === -->
+  <script>
+    async function loadPosts() {
+      const res = await fetch('posts.json');
+      const posts = await res.json();
+
+      const params = new URLSearchParams(window.location.search);
+      const postId = params.get('post');
+
+      if (postId) renderSingle(posts, postId);
+      else renderGrid(posts);
+    }
+
+    function renderGrid(posts) {
+      document.getElementById('single-post').style.display = 'none';
+
+      const grid = document.getElementById('posts-container');
+      grid.style.display = 'grid';
+      grid.innerHTML = '';
+
+      posts
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'post-card';
+          div.innerHTML = `
+            <h2>${p.title}</h2>
+            <div class="meta">${new Date(p.date).toLocaleDateString()} • ${p.readTime}</div>
+            <p>${p.excerpt}</p>
+            <a class="read-more" href="?post=${p.id}">Read More →</a>
+          `;
+          grid.appendChild(div);
+        });
+    }
+
+    function renderSingle(posts, id) {
+      const post = posts.find(p => p.id === id);
+      if (!post) return renderGrid(posts);
+
+      document.getElementById('posts-container').style.display = 'none';
+
+      const single = document.getElementById('single-post');
+      single.style.display = 'block';
+
+      document.getElementById('single-title').textContent = post.title;
+      document.getElementById('single-meta').textContent =
+        new Date(post.date).toLocaleDateString() + " • " + post.readTime;
+
+      document.getElementById('single-body').innerHTML = post.bodyHtml;
+
+      document.getElementById('back-to-list').onclick = () => {
+        window.location = window.location.pathname;
+      };
+    }
+
+    loadPosts();
+  </script>
+
+</body>
+</html>
