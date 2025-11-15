@@ -9,10 +9,7 @@
 ![Blog Engine](https://img.shields.io/badge/Engine-Dynamic%20Blog%20System-cyan)
 ![Security](https://img.shields.io/badge/Security-Zero%20Backend%20Attack%20Surface-red)
 # 🛡️ SwarmShield HQ — AI Security Intelligence Platform  
-![Status](https://img.shields.io/badge/status-active-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Cloudflare Pages](https://img.shields.io/badge/hosting-Cloudflare%20Pages-orange)
-![Powered by AI](https://img.shields.io/badge/powered%20by-AI%20Security%20Models-purple)
+
 
 SwarmShield HQ is a lightweight, fast, AI-powered cybersecurity intelligence platform built for **schools, creators, and small organizations**.  
 This version includes:
